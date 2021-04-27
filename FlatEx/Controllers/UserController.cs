@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace FlatEx.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
     public class UserController : Controller
     {
@@ -18,34 +17,51 @@ namespace FlatEx.Controllers
             _userRepository = uesRepository;
         }
 
+
         [HttpGet]
+        [Route("/Users")]
         public IEnumerable<User> Index()
         {
             return _userRepository.GetAll();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("/Login")]
+        public int Login(string name, string surname)
+        {
+            var user = _userRepository.GetAll().FirstOrDefault(u => u.Name == name && u.Surname == surname);
+            if(user != null)
+                return user.Id;
+
+            return 0;
+        }
+
+        [HttpGet]
+        [Route("/User/{id}")]
         public User GetUser(int id)
         {
             return _userRepository.Get(id);
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
+        [Route("/User/{id}")]
         public IActionResult CreateUser([FromBody] User user)
         {
             _userRepository.Post(user);
             return Ok();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("/User/{id}")]
         public IActionResult UpdateUser([FromBody] User user)
         {
             _userRepository.Put(user);
             return Ok();
         }
 
-        [HttpPut("{id}")]
-        public IActionResult DleteUser([FromBody] User user)
+        [HttpDelete]
+        [Route("/User/{id}")]
+        public IActionResult DeleteUser([FromBody] User user)
         {
             _userRepository.Delete(user);
             return Ok();
