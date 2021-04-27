@@ -13,6 +13,9 @@ using DBRepository.Interfaces;
 using DBRepository.Repositories;
 using Microsoft.Extensions.Configuration;
 using Models.Models;
+using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
+using React.AspNet;
+using JavaScriptEngineSwitcher.ChakraCore;
 
 namespace FlatEx
 {
@@ -27,6 +30,8 @@ namespace FlatEx
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             string connection = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(connection));
@@ -38,6 +43,9 @@ namespace FlatEx
             services.AddScoped<IRepository<ApartmentDemand>, ApartmentDemandRepository>();
 
             services.AddMvc();
+
+            services.AddReact();
+            services.AddJsEngineSwitcher(options => options.DefaultEngineName = ChakraCoreJsEngine.EngineName).AddChakraCore();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +56,10 @@ namespace FlatEx
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseReact(config => { });
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            /*
             app.UseRouting();
 
             app.UseStaticFiles();
@@ -57,7 +69,7 @@ namespace FlatEx
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+            });*/
         }
     }
 }
