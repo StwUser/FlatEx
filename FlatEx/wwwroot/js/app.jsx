@@ -69,21 +69,51 @@ ReactDOM.render(
 class UserRegistrationForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { name: "", surname: "", email: "" };
+        var name = props.name;
+        var nameIsValid = this.validateName(name);
+        var surname = props.surname;
+        var surnameIsValid = this.validateName(surname);
+        var email = props.email;
+        var emailIsValid = this.validateEmail(email);
 
-        this.onSubmitRegister = this.onSubmitRegister.bind(this);
+        this.state = { name: "", nameValid: nameIsValid, surname: "", surnameValid : surnameIsValid, email: "", emailValid : emailIsValid };
+
         this.onNameChange = this.onNameChange.bind(this);
         this.onSurnameChange = this.onSurnameChange.bind(this);
         this.onEmailChange = this.onEmailChange.bind(this);
+        this.onSubmitRegister = this.onSubmitRegister.bind(this);
     }
+    validateName(name) {
+        if (name === undefined || name === null)
+            return false;
+        return name.length > 2 && name.length < 20;
+    }
+    validateSurname(surname) {
+        if (surname === undefined || surname === null)
+            return false;
+        return surname.length > 2 && surname.length < 20;
+    }
+    validateEmail(email) {
+        if (email === undefined || email === null)
+            return false;
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+
     onNameChange(e) {
-        this.setState({ name: e.target.value });
+        var val = e.target.value;
+        var valid = this.validateName(val);
+        this.setState({ name: val, nameValid: valid });
     }
     onSurnameChange(e) {
-        this.setState({ surname: e.target.value });
+        var val = e.target.value;
+        var valid = this.validateSurname(val);
+        this.setState({ surname: val, surnameValid : valid });
     }
     onEmailChange(e) {
-        this.setState({ email: e.target.value });
+        var val = e.target.value;
+        var valid = this.validateEmail(val);
+        this.setState({ email: val, emailValid : valid });
     }
     onSubmitRegister(e) {
         e.preventDefault();
@@ -109,27 +139,40 @@ class UserRegistrationForm extends React.Component {
     }
 
     render() {
+        // validation
+        var nameColor = this.state.nameValid === true ? "green" : "red";
+        var surnameColor = this.state.surnameValid === true ? "green" : "red";
+        var emailColor = this.state.emailValid === true ? "green" : "red";
+        var btnDisabled = true;
+        if (this.state.nameValid && this.state.surnameValid && this.state.emailValid)
+            btnDisabled = false;
+        else
+            btnDisabled = true;
+
         return (
             <form onSubmit={this.onSubmitRegister}>
                 <p>
                     <input type="text"
                            placeholder="Name"
                            value={this.state.name}
-                           onChange={this.onNameChange} />
+                           onChange={this.onNameChange}
+                           style={{ borderColor: nameColor }} />
                 </p>
                 <p>
                     <input type="text"
                            placeholder="Surname"
                            value={this.state.surname}
-                           onChange={this.onSurnameChange} />
+                           onChange={this.onSurnameChange} 
+                           style={{ borderColor: surnameColor }} />
                 </p>
                 <p>
                     <input type="text"
                            placeholder="Email"
                            value={this.state.email}
-                           onChange={this.onEmailChange} />
+                           onChange={this.onEmailChange}
+                           style={{ borderColor: emailColor }}/>
                 </p>
-                <input type="submit" value="Register" />
+                <input id="btnRegister" type="submit" value="Register" disabled={btnDisabled} />
             </form>
         );
     }
