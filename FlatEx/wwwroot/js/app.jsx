@@ -25,17 +25,25 @@
         this.login(userName, userSurname);
     }
     login(userName, userSurname) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("get", `${this.props.apiUrl}?name=${userName}&surname=${userSurname}`, true);
-        xhr.onload = function () {
-            var data = JSON.parse(xhr.responseText);
-            window.userId = data;
+        if (userName !== undefined && userSurname !== undefined) {
 
-            if (data !== 0)
-                swal("you are logged in", "you have access to the user's personal account and the submission of ads", "success");
+            var xhr = new XMLHttpRequest();
+            xhr.open("get", `${this.props.apiUrl}?name=${userName}&surname=${userSurname}`, true);
+            xhr.onload = function() {
+                var data = JSON.parse(xhr.responseText);
+                window.userId = data;
 
-        }.bind(this);
-        xhr.send();
+                if (data !== 0)
+                    swal("you are logged in",
+                        "you have access to the user's personal account and the submission of ads",
+                        "success");
+
+                if (data === 0)
+                    swal("user isn't exists", "", "error");
+
+            }.bind(this);
+            xhr.send();
+        }
     }
     componentDidMount() {
         this.login();
