@@ -37,10 +37,15 @@ namespace DBRepository.Repositories
             throw new NotImplementedException();
         }
 
-        public void Delete(User entity)
+        public void Delete(int id)
         {
-            _context.Users.Remove(entity);
-            _context.SaveChanges();
+            var entity = _context.Users.FirstOrDefault(u => u.Id == id);
+
+            if (entity != null)
+            {
+                _context.Users.Remove(entity);
+                _context.SaveChanges();
+            }
         }
 
         public void Put(User entity)

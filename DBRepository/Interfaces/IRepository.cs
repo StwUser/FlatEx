@@ -13,7 +13,7 @@ namespace DBRepository.Interfaces
 
         void Put(T entity);
 
-        void Delete(T entity);
+        void Delete(int id);
         IEnumerable<T> GetAll();
 
         IEnumerable<T> GetFilteredQuery(T filter);

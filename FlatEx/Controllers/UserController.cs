@@ -44,7 +44,7 @@ namespace FlatEx.Controllers
         }
 
         [HttpPost]
-        [Route("/User/{id}")]
+        [Route("/User")]
         public IActionResult CreateUser([FromBody] User user)
         {
             _userRepository.Post(user);
@@ -52,7 +52,7 @@ namespace FlatEx.Controllers
         }
 
         [HttpPut]
-        [Route("/User/{id}")]
+        [Route("/User")]
         public IActionResult UpdateUser([FromBody] User user)
         {
             _userRepository.Put(user);
@@ -61,9 +61,9 @@ namespace FlatEx.Controllers
 
         [HttpDelete]
         [Route("/User/{id}")]
-        public IActionResult DeleteUser([FromBody] User user)
+        public IActionResult DeleteUser(int id)
         {
-            _userRepository.Delete(user);
+            _userRepository.Delete(id);
             return Ok();
         }
     }

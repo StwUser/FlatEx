@@ -38,10 +38,15 @@ namespace DBRepository.Repositories
             throw new NotImplementedException();
         }
 
-        public void Delete(ApartmentOffer entity)
+        public void Delete(int id)
         {
-            _context.ApartmentOffers.Remove(entity);
-            _context.SaveChanges();
+            var entity = _context.ApartmentOffers.FirstOrDefault(a => a.Id == id);
+
+            if (entity != null)
+            {
+                _context.ApartmentOffers.Remove(entity);
+                _context.SaveChanges();
+            }
         }
 
         public void Put(ApartmentOffer entity)
