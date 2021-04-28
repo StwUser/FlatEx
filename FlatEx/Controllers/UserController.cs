@@ -27,13 +27,13 @@ namespace FlatEx.Controllers
 
         [HttpGet]
         [Route("/Login")]
-        public int Login(string name, string surname)
+        public User Login(string name, string surname)
         {
             var user = _userRepository.GetAll().FirstOrDefault(u => u.Name == name && u.Surname == surname);
-            if(user != null)
-                return user.Id;
+            if(user == null)
+                return null;
 
-            return 0;
+            return user;
         }
 
         [HttpGet]

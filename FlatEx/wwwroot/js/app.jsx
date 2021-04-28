@@ -31,14 +31,17 @@
             xhr.open("get", `${this.props.apiUrl}?name=${userName}&surname=${userSurname}`, true);
             xhr.onload = function() {
                 var data = JSON.parse(xhr.responseText);
-                window.userId = data;
+                window.userId = data.id;
+                window.name = data.name;
+                window.surname = data.surname;
+                window.email = data.email;
 
-                if (data !== 0)
+                if (data !== null)
                     swal("you are logged in",
                         "you have access to the user's personal account and the submission of ads",
                         "success");
 
-                if (data === 0)
+                if (data === null || data === undefined)
                     swal("user isn't exists", "", "error");
 
             }.bind(this);
@@ -190,3 +193,25 @@ ReactDOM.render(
     <UserRegistrationForm apiUrl="/user" />,
     document.getElementById("registration")
 );
+
+class UserCabinetForm extends React.Component {
+    constructor(props) {
+        super(props);
+
+    }
+
+    render() {
+        return <div>
+                    <p>Personal Info:</p>
+                    <p>name: {window.name}, surname: {window.surname}, email: {window.email}</p>
+               </div>;
+    }
+}
+
+function renderCabinet() {
+    window.ReactDOM.render(
+        <UserCabinetForm apiUserUrl="/user" apiUrl="/user"/>,
+        document.getElementById("personalCabinet")
+    );
+}
+
