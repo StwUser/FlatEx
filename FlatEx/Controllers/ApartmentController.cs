@@ -37,7 +37,7 @@ namespace FlatEx.Controllers
 
         [HttpPost]
         [Route("/Apartment/Offers")]
-        public IActionResult CreateUser([FromBody] ApartmentOffer offer)
+        public IActionResult CreateApartmentOffer([FromBody] ApartmentOffer offer)
         {
             _apartmentOfferRepository.Post(offer);
             return Ok();

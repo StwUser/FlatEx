@@ -393,45 +393,89 @@ class ApartmentOfferForm extends React.Component{
 class ApartmentOfferRegistrationForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { name: "" };
+        this.state = { title: "", content: "", square: "", address : "", price : "" };
 
-        this.onNameChange = this.onNameChange.bind(this);
+        this.onSubmitRegister = this.onSubmitRegister.bind(this);
+        this.onTitleChange = this.onTitleChange.bind(this);
+        this.onContentChange = this.onContentChange.bind(this);
+        this.onSquareChange = this.onSquareChange.bind(this);
+        this.onAddressChange = this.onAddressChange.bind(this);
+        this.onPriceChange = this.onPriceChange.bind(this);
     }
-    onNameChange(e) {
-        this.setState({ name: val });
+    onTitleChange(e) {
+        this.setState({ title: e.target.value });
     }
+    onContentChange(e) {
+        this.setState({ content: e.target.value });
+    }
+    onSquareChange(e) {
+        this.setState({ square: e.target.value });
+    }
+    onAddressChange(e) {
+        this.setState({ address: e.target.value });
+    }
+    onPriceChange(e) {
+        this.setState({ price: e.target.value });
+    }    
     onSubmitRegister(e) {
         e.preventDefault();
-        var userName = this.state.name.trim();
+        var title = this.state.title.trim();
+        var content = this.state.content.trim();
+        var square = this.state.square.trim();
+        var address = this.state.address.trim();
+        var price = this.state.price.trim();
 
-        if (!userName) {
+        if (!title || !content || !address) {
             return;
         }
-        this.addUser(userName);
+        this.addUser(title, content, square, address, price);
     }
-    addUser(userName) {
+    addUser(title, content, square, address, price) {
         var xhr = new XMLHttpRequest();
         xhr.open("post", this.props.apiUrl, true);
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         xhr.onload = function () {
             if (xhr.status === 200) {
-                swal("user created", "", "success");
+                swal("offer created", "", "success");
             }
         }.bind(this);
-        xhr.send(`{"name": "${userName}"}`);
+        xhr.send(`{"userId" : "${window.userId}", "title": "${title}", "content": "${content}", "square": "${square}", "address" : "${address}", "price" : "${price}"}`);
     }
 
     render() {
-
         return (
             <form onSubmit={this.onSubmitRegister}>
                 <p>
                     <input type="text"
-                        placeholder="Name"
-                        value={this.state.name}
-                        onChange={this.onNameChange} />
+                           placeholder="Title"
+                           value={this.state.title}
+                           onChange={this.onTitleChange} />
                 </p>
-                <input id="btnRegister" type="submit" value="Add" />
+                <p>
+                    <input type="text"
+                           placeholder="Content"
+                           value={this.state.content}
+                           onChange={this.onContentChange} />
+                </p>
+                <p>
+                    <input type="text"
+                           placeholder="Square"
+                           value={this.state.square}
+                           onChange={this.onSquareChange} />
+                </p>
+                <p>
+                    <input type="text"
+                           placeholder="Address"
+                           value={this.state.address}
+                           onChange={this.onAddressChange} />
+                </p>
+                <p>
+                    <input type="text"
+                           placeholder="Price"
+                           value={this.state.price}
+                           onChange={this.onPriceChange} />
+                </p>
+                <input type="submit" value="Add" />
             </form>
         );
     }
@@ -446,7 +490,7 @@ class UserSubmittingAdForm extends React.Component {
           <div> 
               <div style={{"width" : "50%"}}>
                   <p><b>Add apartment offer</b></p>
-                  <ApartmentOfferRegistrationForm />
+                  <ApartmentOfferRegistrationForm apiUrl="/Apartment/Offers" />
               </div>
           </div>
         );
