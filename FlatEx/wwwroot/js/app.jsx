@@ -263,6 +263,75 @@ class ApartmentOfferList extends React.Component {
     }
 }
 
+class ApartmentDemand extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { data: props.apartmentDemand };
+
+        this.onClick = this.onClick.bind(this);
+    }
+    onClick(e) {
+        this.props.onRemove(this.state.data);
+    }
+    render() {
+        return <div>
+            <p><b>id</b> {this.state.data.id}  | <b>title</b> {this.state.data.title}  | <b>content</b> {this.state.data.content}  | <b>square</b>  | {this.state.data.square}m  | <b>prefere address</b> {this.state.data.prefereAddress}  | <b>price cap</b> {this.state.data.priceCap} USD  | <button onClick={this.onClick} style={{"borderRadius" : "2px"}}>delete</button></p>
+               </div>;
+    }
+}
+
+class ApartmentDemandList extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { apartmentDemands: [] };
+        
+        this.onRemoveApartmentDemand = this.onRemoveApartmentDemand.bind(this);
+    }
+    loadData() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("get", this.props.apiUrl + "/" + window.userId, true);
+        xhr.onload = function () {
+            var data = JSON.parse(xhr.responseText);
+            this.setState({ apartmentDemands: data });
+        }.bind(this);
+        xhr.send();
+    }
+    componentDidMount() {
+        this.loadData();
+    }
+    onRemoveApartmentDemand(apartmentDemand) {
+ 
+        if (apartmentDemand) {
+            var url = this.props.apiUrl + "/" + apartmentDemand.id;
+             
+            var xhr = new XMLHttpRequest();
+            xhr.open("delete", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    this.loadData();
+                }
+            }.bind(this);
+            xhr.send();
+        }
+    }
+    render() {
+        var remove = this.onRemoveApartmentDemand;
+        return <div>
+               <span><b>My apartments for demand</b></span>
+                   <div>
+                        {
+                          this.state.apartmentDemands.map(function (apartmentDemand) {
+
+                          return <ApartmentDemand key={apartmentDemand.id} apartmentDemand={apartmentDemand} onRemove={remove} />
+                          })
+                        }
+                    </div>
+               </div>;
+    }
+}
+
 class UserCabinetForm extends React.Component {
     constructor(props) {
         super(props);
@@ -273,6 +342,7 @@ class UserCabinetForm extends React.Component {
         return <div>
                 <p>User personal info:    name - {window.name}  surname - {window.surname}  email - {window.email}</p>
                 <ApartmentOfferList apiUrl="/Apartment/Offers" />
+                <ApartmentDemandList apiUrl="/Apartment/Demands" />
         </div>;
     }
 }
