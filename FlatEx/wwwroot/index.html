@@ -10,7 +10,7 @@
             <li><button onclick="btnSignInOnClick()">Sign In</button></li>
             <li><button onclick="btnRegistrationOnClick()">Registration</button></li>
             <li><button onclick="btnPersonalCabinetOnClick()">Personal Cabinet</button></li>
-            <li><button>Add Ad</button></li>
+            <li><button onclick="btnAddAdOnClick()">Add Ad</button></li>
             <li><button>Search</button></li>
         </ul>
         <div style="clear: left;"></div>
@@ -50,6 +50,17 @@
         hideAllPages();
         document.getElementById("personalCabinet").style.display = "block";
         renderCabinet();
+    }
+
+    function btnAddAdOnClick()
+    {
+        if (window.userId === 0) {
+            swal("you're not logged in system", "", "error");
+            return;
+        }
+        hideAllPages();
+        document.getElementById("ads").style.display = "block";
+        renderAds();
     }
 
     function hideAllPages() {

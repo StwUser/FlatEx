@@ -2,7 +2,7 @@
 
     constructor(props) {
         super(props);
-        this.state = { name: "", surname: ""};
+        this.state = { name: "", surname: "" };
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onNameChange = this.onNameChange.bind(this);
@@ -29,7 +29,7 @@
 
             var xhr = new XMLHttpRequest();
             xhr.open("get", `${this.props.apiUrl}?name=${userName}&surname=${userSurname}`, true);
-            xhr.onload = function() {
+            xhr.onload = function () {
                 var data = JSON.parse(xhr.responseText);
                 window.userId = data.id;
                 window.name = data.name;
@@ -56,14 +56,14 @@
             <form onSubmit={this.onSubmit}>
                 <p>
                     <input type="text"
-                           placeholder="Name"
-                           value={this.state.name}
-                           onChange={this.onNameChange} />
+                        placeholder="Name"
+                        value={this.state.name}
+                        onChange={this.onNameChange} />
                 </p>
                 <p>
                     <input type="text"
-                           placeholder="Surname"
-                           value={this.state.surname}
+                        placeholder="Surname"
+                        value={this.state.surname}
                         onChange={this.onSurnameChange} />
                 </p>
                 <input type="submit" value="Sign in" />
@@ -87,7 +87,7 @@ class UserRegistrationForm extends React.Component {
         var email = props.email;
         var emailIsValid = this.validateEmail(email);
 
-        this.state = { name: "", nameValid: nameIsValid, surname: "", surnameValid : surnameIsValid, email: "", emailValid : emailIsValid };
+        this.state = { name: "", nameValid: nameIsValid, surname: "", surnameValid: surnameIsValid, email: "", emailValid: emailIsValid };
 
         this.onNameChange = this.onNameChange.bind(this);
         this.onSurnameChange = this.onSurnameChange.bind(this);
@@ -119,12 +119,12 @@ class UserRegistrationForm extends React.Component {
     onSurnameChange(e) {
         var val = e.target.value;
         var valid = this.validateSurname(val);
-        this.setState({ surname: val, surnameValid : valid });
+        this.setState({ surname: val, surnameValid: valid });
     }
     onEmailChange(e) {
         var val = e.target.value;
         var valid = this.validateEmail(val);
-        this.setState({ email: val, emailValid : valid });
+        this.setState({ email: val, emailValid: valid });
     }
     onSubmitRegister(e) {
         e.preventDefault();
@@ -164,24 +164,24 @@ class UserRegistrationForm extends React.Component {
             <form onSubmit={this.onSubmitRegister}>
                 <p>
                     <input type="text"
-                           placeholder="Name"
-                           value={this.state.name}
-                           onChange={this.onNameChange}
-                           style={{ borderColor: nameColor }} />
+                        placeholder="Name"
+                        value={this.state.name}
+                        onChange={this.onNameChange}
+                        style={{ borderColor: nameColor }} />
                 </p>
                 <p>
                     <input type="text"
-                           placeholder="Surname"
-                           value={this.state.surname}
-                           onChange={this.onSurnameChange} 
-                           style={{ borderColor: surnameColor }} />
+                        placeholder="Surname"
+                        value={this.state.surname}
+                        onChange={this.onSurnameChange}
+                        style={{ borderColor: surnameColor }} />
                 </p>
                 <p>
                     <input type="text"
-                           placeholder="Email"
-                           value={this.state.email}
-                           onChange={this.onEmailChange}
-                           style={{ borderColor: emailColor }}/>
+                        placeholder="Email"
+                        value={this.state.email}
+                        onChange={this.onEmailChange}
+                        style={{ borderColor: emailColor }} />
                 </p>
                 <input id="btnRegister" type="submit" value="Register" disabled={btnDisabled} />
             </form>
@@ -194,6 +194,56 @@ ReactDOM.render(
     document.getElementById("registration")
 );
 
+class ApartmentOffer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { data: props.apartmentOffer };
+
+    }
+    render() {
+        return <div>
+                   <p><b>{this.state.data.title}</b></p>
+                   <p>Content {this.state.data.content}</p>
+               </div>;
+    }
+}
+
+class ApartmentOfferList extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { apartmentOffers: [] };
+
+    }
+    loadData() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("get", "/Apartment/Offers/1", true);
+        xhr.onload = function () {
+            var data = JSON.parse(xhr.responseText);
+            console.log(data);
+            this.setState({ apartmentOffers: data });
+            console.log(this.state);
+        }.bind(this);
+        xhr.send();
+    }
+    componentDidMount() {
+        this.loadData();
+    }
+    render() {
+        return <div>
+                    <span>hello loser</span>
+                    <div>
+                        {
+                             this.state.apartmentOffers.map(function (apartmentOffer) {
+
+                                 return <ApartmentOffer key={apartmentOffer.id} apartmentOffer={apartmentOffer} />
+                          })
+                        }
+                    </div>
+               </div>;
+    }
+}
+
 class UserCabinetForm extends React.Component {
     constructor(props) {
         super(props);
@@ -202,6 +252,7 @@ class UserCabinetForm extends React.Component {
 
     render() {
         return <div>
+                    <ApartmentOfferList />
                     <p>Personal Info:</p>
                     <p>name: {window.name}, surname: {window.surname}, email: {window.email}</p>
                </div>;
@@ -210,7 +261,7 @@ class UserCabinetForm extends React.Component {
 
 function renderCabinet() {
     window.ReactDOM.render(
-        <UserCabinetForm apiUserUrl="/user" apiUrl="/user"/>,
+        <UserCabinetForm apiUserUrl="/user" apiUrl="/user" />,
         document.getElementById("personalCabinet")
     );
 }

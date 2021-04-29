@@ -12,9 +12,9 @@ namespace FlatEx.Controllers
     public class UserController : Controller
     {
         private readonly IRepository<User> _userRepository;
-        public UserController(IRepository<User> uesRepository)
+        public UserController(IRepository<User> useRepository)
         {
-            _userRepository = uesRepository;
+            _userRepository = useRepository;
         }
 
 
