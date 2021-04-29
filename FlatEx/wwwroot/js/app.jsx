@@ -199,10 +199,14 @@ class ApartmentOffer extends React.Component {
         super(props);
         this.state = { data: props.apartmentOffer };
 
+        this.onClick = this.onClick.bind(this);
+    }
+    onClick(e) {
+        this.props.onRemove(this.state.data);
     }
     render() {
         return <div>
-            <p><b>id</b> {this.state.data.id}  | <b>title</b> {this.state.data.title}  | <b>content</b> {this.state.data.content}  | <b>square</b>  | {this.state.data.square}m  | <b>address</b> {this.state.data.address}  | <b>price</b> {this.state.data.price} USD</p>
+            <p><b>id</b> {this.state.data.id}  | <b>title</b> {this.state.data.title}  | <b>content</b> {this.state.data.content}  | <b>square</b>  | {this.state.data.square}m  | <b>address</b> {this.state.data.address}  | <b>price</b> {this.state.data.price} USD  | <button onClick={this.onClick} style={{"borderRadius" : "2px"}}>delete</button></p>
                </div>;
     }
 }
@@ -212,7 +216,8 @@ class ApartmentOfferList extends React.Component {
     constructor(props) {
         super(props);
         this.state = { apartmentOffers: [] };
-
+        
+        this.onRemoveApartmentOffer = this.onRemoveApartmentOffer.bind(this);
     }
     loadData() {
         var xhr = new XMLHttpRequest();
@@ -226,14 +231,31 @@ class ApartmentOfferList extends React.Component {
     componentDidMount() {
         this.loadData();
     }
+    onRemoveApartmentOffer(apartmentOffer) {
+ 
+        if (apartmentOffer) {
+            var url = this.props.apiUrl + "/" + apartmentOffer.id;
+             
+            var xhr = new XMLHttpRequest();
+            xhr.open("delete", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    this.loadData();
+                }
+            }.bind(this);
+            xhr.send();
+        }
+    }
     render() {
+        var remove = this.onRemoveApartmentOffer;
         return <div>
                <span><b>My apartments for offer</b></span>
                    <div>
                         {
                           this.state.apartmentOffers.map(function (apartmentOffer) {
 
-                          return <ApartmentOffer key={apartmentOffer.id} apartmentOffer={apartmentOffer} />
+                          return <ApartmentOffer key={apartmentOffer.id} apartmentOffer={apartmentOffer} onRemove={remove} />
                           })
                         }
                     </div>
@@ -249,9 +271,9 @@ class UserCabinetForm extends React.Component {
 
     render() {
         return <div>
-                    <p>User personal info:    name - {window.name}  surname - {window.surname}  email - {window.email}</p>
-                    <ApartmentOfferList apiUrl="/Apartment/Offers" />
-               </div>;
+                <p>User personal info:    name - {window.name}  surname - {window.surname}  email - {window.email}</p>
+                <ApartmentOfferList apiUrl="/Apartment/Offers" />
+        </div>;
     }
 }
 
