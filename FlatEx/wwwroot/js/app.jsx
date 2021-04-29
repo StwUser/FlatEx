@@ -36,12 +36,12 @@
                 window.surname = data.surname;
                 window.email = data.email;
 
-                if (data !== null)
+                if (data.id !== 0)
                     swal("you are logged in",
                         "you have access to the user's personal account and the submission of ads",
                         "success");
 
-                if (data === null || data === undefined)
+                if (data.id === 0)
                     swal("user isn't exists", "", "error");
 
             }.bind(this);
@@ -216,12 +216,10 @@ class ApartmentOfferList extends React.Component {
     }
     loadData() {
         var xhr = new XMLHttpRequest();
-        xhr.open("get", this.props.apiUrl + "/1", true);
+        xhr.open("get", this.props.apiUrl + "/" + window.userId, true);
         xhr.onload = function () {
             var data = JSON.parse(xhr.responseText);
-            console.log(data);
             this.setState({ apartmentOffers: data });
-            console.log(this.state);
         }.bind(this);
         xhr.send();
     }

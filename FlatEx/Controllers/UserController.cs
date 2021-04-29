@@ -31,7 +31,7 @@ namespace FlatEx.Controllers
         {
             var user = _userRepository.GetAll().FirstOrDefault(u => u.Name == name && u.Surname == surname);
             if(user == null)
-                return null;
+                return new User { Id = 0 };
 
             return user;
         }
