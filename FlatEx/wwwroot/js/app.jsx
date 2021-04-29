@@ -202,8 +202,7 @@ class ApartmentOffer extends React.Component {
     }
     render() {
         return <div>
-                   <p><b>{this.state.data.title}</b></p>
-                   <p>Content {this.state.data.content}</p>
+            <p>id {this.state.data.id}  | title {this.state.data.title}  | content {this.state.data.content}  | square  | {this.state.data.square}  | address {this.state.data.address}  | price {this.state.data.price}</p>
                </div>;
     }
 }
@@ -217,7 +216,7 @@ class ApartmentOfferList extends React.Component {
     }
     loadData() {
         var xhr = new XMLHttpRequest();
-        xhr.open("get", "/Apartment/Offers/1", true);
+        xhr.open("get", this.props.apiUrl + "/1", true);
         xhr.onload = function () {
             var data = JSON.parse(xhr.responseText);
             console.log(data);
@@ -231,12 +230,12 @@ class ApartmentOfferList extends React.Component {
     }
     render() {
         return <div>
-                    <span>hello loser</span>
-                    <div>
+               <span><b>My apartments for offer</b></span>
+                   <div>
                         {
-                             this.state.apartmentOffers.map(function (apartmentOffer) {
+                          this.state.apartmentOffers.map(function (apartmentOffer) {
 
-                                 return <ApartmentOffer key={apartmentOffer.id} apartmentOffer={apartmentOffer} />
+                          return <ApartmentOffer key={apartmentOffer.id} apartmentOffer={apartmentOffer} />
                           })
                         }
                     </div>
@@ -252,9 +251,8 @@ class UserCabinetForm extends React.Component {
 
     render() {
         return <div>
-                    <ApartmentOfferList />
-                    <p>Personal Info:</p>
-                    <p>name: {window.name}, surname: {window.surname}, email: {window.email}</p>
+                    <p>User personal info:    name - {window.name}  surname - {window.surname}  email - {window.email}</p>
+                    <ApartmentOfferList apiUrl="/Apartment/Offers" />
                </div>;
     }
 }
@@ -265,4 +263,3 @@ function renderCabinet() {
         document.getElementById("personalCabinet")
     );
 }
-
