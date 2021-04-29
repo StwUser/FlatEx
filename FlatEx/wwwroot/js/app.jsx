@@ -202,7 +202,7 @@ class ApartmentOffer extends React.Component {
     }
     render() {
         return <div>
-            <p>id {this.state.data.id}  | title {this.state.data.title}  | content {this.state.data.content}  | square  | {this.state.data.square}  | address {this.state.data.address}  | price {this.state.data.price}</p>
+            <p><b>id</b> {this.state.data.id}  | <b>title</b> {this.state.data.title}  | <b>content</b> {this.state.data.content}  | <b>square</b>  | {this.state.data.square}m  | <b>address</b> {this.state.data.address}  | <b>price</b> {this.state.data.price} USD</p>
                </div>;
     }
 }
