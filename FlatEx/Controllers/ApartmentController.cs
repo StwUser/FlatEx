@@ -12,10 +12,20 @@ namespace FlatEx.Controllers
     public class ApartmentController : Controller
     {
         private readonly IRepository<ApartmentOffer> _apartmentOfferRepository;
+        private readonly IRepository<ApartmentDemand> _apartmentDemandRepository;
 
-        public ApartmentController(IRepository<ApartmentOffer> apartmentOfferRepository)
+        public ApartmentController(IRepository<ApartmentOffer> apartmentOfferRepository, IRepository<ApartmentDemand> apartmentDemandRepository)
         {
             _apartmentOfferRepository = apartmentOfferRepository;
+            _apartmentDemandRepository = apartmentDemandRepository;
+        }
+
+        //Offers Part
+        [HttpGet]
+        [Route("/Apartment/Offers")]
+        public IEnumerable<ApartmentOffer> GetAllApartmentOffers()
+        {
+            return _apartmentOfferRepository.GetAll();
         }
 
         [HttpGet]
@@ -27,9 +37,32 @@ namespace FlatEx.Controllers
 
         [HttpDelete]
         [Route("/Apartment/Offers/{id}")]
-        public IActionResult DeleteUser(int id)
+        public IActionResult DeleteApartmentOffer(int id)
         {
             _apartmentOfferRepository.Delete(id);
+            return Ok();
+        }
+
+        //Demands Part
+        [HttpGet]
+        [Route("/Apartment/Demands")]
+        public IEnumerable<ApartmentDemand> GetAllApartmentDemands()
+        {
+            return _apartmentDemandRepository.GetAll();
+        }
+
+        [HttpGet]
+        [Route("/Apartment/Demands/{userId}")]
+        public IEnumerable<ApartmentDemand> GetApartmentDemands(int userId)
+        {
+            return _apartmentDemandRepository.GetAll().Where(a => a.UserId == userId);
+        }
+
+        [HttpDelete]
+        [Route("/Apartment/Demands/{id}")]
+        public IActionResult DeleteApartmentDemand(int id)
+        {
+            _apartmentDemandRepository.Delete(id);
             return Ok();
         }
     }
