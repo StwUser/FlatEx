@@ -35,6 +35,14 @@ namespace FlatEx.Controllers
             return _apartmentOfferRepository.GetAll().Where(a => a.UserId == userId);
         }
 
+        [HttpPost]
+        [Route("/Apartment/Offers")]
+        public IActionResult CreateUser([FromBody] ApartmentOffer offer)
+        {
+            _apartmentOfferRepository.Post(offer);
+            return Ok();
+        }
+
         [HttpDelete]
         [Route("/Apartment/Offers/{id}")]
         public IActionResult DeleteApartmentOffer(int id)

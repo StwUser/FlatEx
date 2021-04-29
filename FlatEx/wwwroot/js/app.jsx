@@ -353,3 +353,109 @@ function renderCabinet() {
         document.getElementById("personalCabinet")
     );
 }
+
+class ApartmentOfferForm extends React.Component{
+ 
+    constructor(props){
+        super(props);
+        this.state = { title: "", content: "", square : 0, address : "", price : 0};
+ 
+        this.onSubmit = this.onSubmit.bind(this);
+        this.onTitleChange = this.onTitleChange.bind(this);
+    }
+    onTitleChange(e) {
+        this.setState({title: e.target.value});
+    }
+    onSubmit(e) {
+        e.preventDefault();
+        var apartmentTitle = this.state.title.trim();
+        if (!apartmentTitle) {
+            return;
+        }
+        this.props.onApartmentOfferSubmit({ title: apartmentTitle });
+        this.setState({title: ""});
+    }
+    render() {
+        return (
+          <form onSubmit={this.onSubmit}>
+              <p>
+                  <input type="text"
+                         placeholder="Title"
+                         value={this.state.title}
+                         onChange={this.onTitleChange} />
+              </p>
+            <input type="submit" value="Add" />
+          </form>
+        );
+    }
+}
+
+class ApartmentOfferRegistrationForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { name: "" };
+
+        this.onNameChange = this.onNameChange.bind(this);
+    }
+    onNameChange(e) {
+        this.setState({ name: val });
+    }
+    onSubmitRegister(e) {
+        e.preventDefault();
+        var userName = this.state.name.trim();
+
+        if (!userName) {
+            return;
+        }
+        this.addUser(userName);
+    }
+    addUser(userName) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("post", this.props.apiUrl, true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                swal("user created", "", "success");
+            }
+        }.bind(this);
+        xhr.send(`{"name": "${userName}"}`);
+    }
+
+    render() {
+
+        return (
+            <form onSubmit={this.onSubmitRegister}>
+                <p>
+                    <input type="text"
+                        placeholder="Name"
+                        value={this.state.name}
+                        onChange={this.onNameChange} />
+                </p>
+                <input id="btnRegister" type="submit" value="Add" />
+            </form>
+        );
+    }
+}
+
+class UserSubmittingAdForm extends React.Component {
+    constructor(props){
+        super(props); 
+    }
+    render() {
+        return (
+          <div> 
+              <div style={{"width" : "50%"}}>
+                  <p><b>Add apartment offer</b></p>
+                  <ApartmentOfferRegistrationForm />
+              </div>
+          </div>
+        );
+    }
+}
+
+function renderAds(){
+    window.ReactDOM.render(
+        <UserSubmittingAdForm />,
+        document.getElementById("ads")
+    );
+}
