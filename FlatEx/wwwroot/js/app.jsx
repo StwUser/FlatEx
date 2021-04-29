@@ -143,7 +143,8 @@ class UserRegistrationForm extends React.Component {
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         xhr.onload = function () {
             if (xhr.status === 200) {
-                swal("user created", "", "success");
+                swal("user created", "now you can sign in system", "success");
+
             }
         }.bind(this);
         xhr.send(`{"name": "${userName}", "surname": "${userSurname}", "email": "${userEmail}"}`);
@@ -231,6 +232,9 @@ class ApartmentOfferList extends React.Component {
     componentDidMount() {
         this.loadData();
     }
+    componentDidUpdate() {
+        this.loadData();
+    }
     onRemoveApartmentOffer(apartmentOffer) {
  
         if (apartmentOffer) {
@@ -300,6 +304,9 @@ class ApartmentDemandList extends React.Component {
     componentDidMount() {
         this.loadData();
     }
+    componentDidUpdate() {
+        this.loadData();
+    }
     onRemoveApartmentDemand(apartmentDemand) {
  
         if (apartmentDemand) {
@@ -354,43 +361,7 @@ function renderCabinet() {
     );
 }
 
-class ApartmentOfferForm extends React.Component{
- 
-    constructor(props){
-        super(props);
-        this.state = { title: "", content: "", square : 0, address : "", price : 0};
- 
-        this.onSubmit = this.onSubmit.bind(this);
-        this.onTitleChange = this.onTitleChange.bind(this);
-    }
-    onTitleChange(e) {
-        this.setState({title: e.target.value});
-    }
-    onSubmit(e) {
-        e.preventDefault();
-        var apartmentTitle = this.state.title.trim();
-        if (!apartmentTitle) {
-            return;
-        }
-        this.props.onApartmentOfferSubmit({ title: apartmentTitle });
-        this.setState({title: ""});
-    }
-    render() {
-        return (
-          <form onSubmit={this.onSubmit}>
-              <p>
-                  <input type="text"
-                         placeholder="Title"
-                         value={this.state.title}
-                         onChange={this.onTitleChange} />
-              </p>
-            <input type="submit" value="Add" />
-          </form>
-        );
-    }
-}
-
-class ApartmentOfferRegistrationForm extends React.Component {
+class ApartmentRegistrationForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = { title: "", content: "", square: "", address : "", price : "" };
@@ -421,9 +392,9 @@ class ApartmentOfferRegistrationForm extends React.Component {
         e.preventDefault();
         var title = this.state.title.trim();
         var content = this.state.content.trim();
-        var square = this.state.square.trim();
+        var square = this.state.square;
         var address = this.state.address.trim();
-        var price = this.state.price.trim();
+        var price = this.state.price;
 
         if (!title || !content || !address) {
             return;
@@ -439,7 +410,7 @@ class ApartmentOfferRegistrationForm extends React.Component {
                 swal("offer created", "", "success");
             }
         }.bind(this);
-        xhr.send(`{"userId" : "${window.userId}", "title": "${title}", "content": "${content}", "square": "${square}", "address" : "${address}", "price" : "${price}"}`);
+        xhr.send(`{"userId" : "${window.userId}", "title": "${title}", "content": "${content}", "square": "${square}", "${this.props.fAddress}" : "${address}", "${this.props.fPrice}" : "${price}"}`);
     }
 
     render() {
@@ -458,22 +429,24 @@ class ApartmentOfferRegistrationForm extends React.Component {
                            onChange={this.onContentChange} />
                 </p>
                 <p>
-                    <input type="text"
+                    <input type="number" min="0" step="1" 
                            placeholder="Square"
                            value={this.state.square}
-                           onChange={this.onSquareChange} />
+                           onChange={this.onSquareChange} 
+                           style={{"WebkitAppearance" : "none", "margin" : "0", "MozAppearance" : "textfield"}} />
                 </p>
                 <p>
                     <input type="text"
-                           placeholder="Address"
+                           placeholder={this.props.pAddress}
                            value={this.state.address}
                            onChange={this.onAddressChange} />
                 </p>
                 <p>
-                    <input type="text"
-                           placeholder="Price"
+                    <input type="number" min="0" step="1"
+                           placeholder={this.props.pPrice}
                            value={this.state.price}
-                           onChange={this.onPriceChange} />
+                           onChange={this.onPriceChange} 
+                           style={{"WebkitAppearance" : "none", "margin" : "0", "MozAppearance" : "textfield"}} />
                 </p>
                 <input type="submit" value="Add" />
             </form>
@@ -488,9 +461,13 @@ class UserSubmittingAdForm extends React.Component {
     render() {
         return (
           <div> 
-              <div style={{"width" : "50%"}}>
+              <div style={{"width" : "49%", "float" : "left"}}>
                   <p><b>Add apartment offer</b></p>
-                  <ApartmentOfferRegistrationForm apiUrl="/Apartment/Offers" />
+                  <ApartmentRegistrationForm apiUrl="/Apartment/Offers" fAddress="address" fPrice="price" pAddress="Address" pPrice="Price" />
+              </div>
+              <div style={{"width" : "49%", "float" : "left"}}>
+                  <p><b>Add apartment demand</b></p>
+                  <ApartmentRegistrationForm apiUrl="/Apartment/Demands" fAddress="preferAddress" fPrice="priceCap" pAddress="Prefer address" pPrice="PriceCap" />
               </div>
           </div>
         );

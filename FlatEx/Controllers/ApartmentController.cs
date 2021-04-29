@@ -66,6 +66,14 @@ namespace FlatEx.Controllers
             return _apartmentDemandRepository.GetAll().Where(a => a.UserId == userId);
         }
 
+        [HttpPost]
+        [Route("/Apartment/Demands")]
+        public IActionResult CreateApartmentDemand([FromBody] ApartmentDemand demand)
+        {
+            _apartmentDemandRepository.Post(demand);
+            return Ok();
+        }
+
         [HttpDelete]
         [Route("/Apartment/Demands/{id}")]
         public IActionResult DeleteApartmentDemand(int id)
