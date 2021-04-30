@@ -32,11 +32,6 @@ namespace DBRepository.Repositories
             return _context.Users.ToList();
         }
 
-        public IEnumerable<User> GetFilteredQuery(User filter)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Delete(int id)
         {
             var entity = _context.Users.FirstOrDefault(u => u.Id == id);
@@ -58,6 +53,14 @@ namespace DBRepository.Repositories
                 _context.Users.Add(entity);
                 _context.SaveChanges();
             }
+        }
+
+        public IEnumerable<User> GetFiltered(Filter filter)
+        {
+            if(!string.IsNullOrEmpty(filter.Name) && !string.IsNullOrEmpty(filter.Surname))
+                return _context.Users.Where(u => u.Name == filter.Name && u.Surname == filter.Surname);
+
+            return _context.Users.ToList();
         }
     }
 }

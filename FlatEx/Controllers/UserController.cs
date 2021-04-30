@@ -29,7 +29,7 @@ namespace FlatEx.Controllers
         [Route("/Login")]
         public User Login(string name, string surname)
         {
-            var user = _userRepository.GetAll().FirstOrDefault(u => u.Name == name && u.Surname == surname);
+            var user = _userRepository.GetFiltered(new Filter {Name = name, Surname = surname}).FirstOrDefault();
             if(user == null)
                 return new User { Id = 0 };
 

@@ -23,8 +23,13 @@ namespace FlatEx.Controllers
         //Offers Part
         [HttpGet]
         [Route("/Apartment/Offers")]
-        public IEnumerable<ApartmentOffer> GetAllApartmentOffers()
+        public IEnumerable<ApartmentOffer> GetAllApartmentOffers([FromQuery]Filter filter)
         {
+            if (filter.SquareFrom != null || filter.SquareTo != null || filter.PriceFrom != null || filter.PriceTo != null)
+            {
+                return _apartmentOfferRepository.GetFiltered(filter);
+            }
+
             return _apartmentOfferRepository.GetAll();
         }
 
@@ -54,8 +59,13 @@ namespace FlatEx.Controllers
         //Demands Part
         [HttpGet]
         [Route("/Apartment/Demands")]
-        public IEnumerable<ApartmentDemand> GetAllApartmentDemands()
+        public IEnumerable<ApartmentDemand> GetAllApartmentDemands([FromQuery] Filter filter)
         {
+            if (filter.SquareFrom != null || filter.SquareTo != null || filter.PriceFrom != null || filter.PriceTo != null)
+            {
+                return _apartmentDemandRepository.GetFiltered(filter);
+            }
+
             return _apartmentDemandRepository.GetAll();
         }
 

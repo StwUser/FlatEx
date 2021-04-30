@@ -11,7 +11,7 @@
             <li><button onclick="btnRegistrationOnClick()">Registration</button></li>
             <li><button onclick="btnPersonalCabinetOnClick()">Personal Cabinet</button></li>
             <li><button onclick="btnAddAdOnClick()">Add Ad</button></li>
-            <li><button>Search</button></li>
+            <li><button onclick="btnSearchOnClick()">Search</button></li>
         </ul>
         <div style="clear: left;"></div>
         <div id="login" class="page"></div>
@@ -28,7 +28,7 @@
         document.getElementById("login").style.display = "block";
     });
 
-    function show() {
+    function showUserId() {
         console.log(window.userId);
     }
 
@@ -61,6 +61,11 @@
         hideAllPages();
         document.getElementById("ads").style.display = "block";
         renderAds();
+    }
+
+    function btnSearchOnClick() {
+        hideAllPages();
+        document.getElementById("search").style.display = "block";
     }
 
     function hideAllPages() {

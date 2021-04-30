@@ -347,7 +347,7 @@ class UserCabinetForm extends React.Component {
 
     render() {
         return <div>
-                <p>User personal info:    name - {window.name}  surname - {window.surname}  email - {window.email}</p>
+                <p>User personal info:    name - <b>{window.name}</b>  surname - <b>{window.surname}</b>  email - <b>{window.email}</b></p>
                 <ApartmentOfferList apiUrl="/Apartment/Offers" />
                 <ApartmentDemandList apiUrl="/Apartment/Demands" />
         </div>;
@@ -480,3 +480,91 @@ function renderAds(){
         document.getElementById("ads")
     );
 }
+
+class UserSearchForm extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = { apartments: [], value: "offers", squareFrom: "", squareTo: "", priceFrom : "", priceTo : "" };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.onSquareFromChange = this.onSquareFromChange.bind(this);
+        this.onSquareToChange = this.onSquareToChange.bind(this);
+        this.onPriceFromChange = this.onPriceFromChange.bind(this);
+        this.onPriceToChange = this.onPriceToChange.bind(this);
+        this.loadApartmens = this.loadApartmens.bind(this);
+    }
+    handleChange(event) {    
+        this.setState({value: event.target.value});
+    }
+    onSquareFromChange(e) {
+        this.setState({ squareFrom: e.target.value });
+    } 
+    onSquareToChange(e) {
+        this.setState({ squareTo: e.target.value });
+    } 
+    onPriceFromChange(e) {
+        this.setState({ priceFrom: e.target.value });
+    }     
+    onPriceToChange(e) {
+        this.setState({ priceTo: e.target.value });
+    }         
+    loadApartmens() {
+        var queryString = `?squareFrom=${this.state.squareFrom}&squareTo=${this.state.squareTo}&priceFrom=${this.state.priceFrom}&priceTo=${this.state.priceTo}`;
+
+        if(this.state.value == "offers")
+            var apiUrl = "/Apartment/Offers";
+        else if(this.state.value == "demands")
+            var apiUrl = "/Apartment/Demands";
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("get", apiUrl + queryString, true);
+        xhr.onload = function () {
+            var data = JSON.parse(xhr.responseText);
+            this.setState({ apartments: data });
+            console.log(data);
+        }.bind(this);
+        xhr.send();
+    }   
+    render() {
+   
+        return (
+            
+          <div> 
+              <select value={this.state.value} onChange={this.handleChange} style={{"margin" : "6px 2px 0 3px", "height" : "21px"}}>
+                <option value="demands">search in Demands</option>
+                <option value="offers">search in Offers</option>
+              </select>
+              <input type="number" placeholder="Square from" value={this.state.squareFrom} onChange={this.onSquareFromChange} style={{"WebkitAppearance" : "none", "margin" : "0", "MozAppearance" : "textfield"}} />
+              <input type="number" placeholder="Square to" value={this.state.squareTo} onChange={this.onSquareToChange} style={{"WebkitAppearance" : "none", "margin" : "0 0 0 2px", "MozAppearance" : "textfield"}} />
+              <input type="number" placeholder="Price from" value={this.state.priceFrom} onChange={this.onPriceFromChange} style={{"WebkitAppearance" : "none", "margin" : "0 0 0 2px", "MozAppearance" : "textfield"}} />
+              <input type="number" placeholder="Price to" value={this.state.priceTo} onChange={this.onPriceToChange} style={{"WebkitAppearance" : "none", "margin" : "0 2px 0 2px", "MozAppearance" : "textfield"}} />
+              <button onClick={this.loadApartmens}> Search </button>
+                <table style={{ "margin" : "6px 0 0 3px", "borderSpacing" : "5px 5px"}}>
+                    <thead></thead>
+                    <tbody>
+                    {this.state.value == "offers" && <tr><th>Id</th><th>User Id</th><th>Title</th><th>Content</th><th>Address</th><th>Square (m)</th><th>Price (USD)</th></tr>}    
+                    {this.state.value == "offers"  && 
+                        this.state.apartments.map(apartment =>(
+                            <tr key={apartment.id}>
+                                <th>{apartment.id}</th><th>{apartment.userId}</th><th>{apartment.title}</th><th>{apartment.content}</th><th>{apartment.address}</th><th>{apartment.square}</th><th>{apartment.price}</th>
+                            </tr>
+                        ))
+                    }
+                    {this.state.value == "demands" && <tr><th>Id</th><th>User Id</th><th>Title</th><th>Content</th><th>Prefer address</th><th>Square (m)</th><th>Price cap (USD)</th></tr>}
+                    {this.state.value == "demands"  && 
+                    this.state.apartments.map(apartment =>(
+                        <tr key={apartment.id}>
+                            <th>{apartment.id}</th><th>{apartment.userId}</th><th>{apartment.title}</th><th>{apartment.content}</th><th>{apartment.preferAddress}</th><th>{apartment.square}</th><th>{apartment.priceCap}</th>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>      
+          </div>
+        );
+    }
+}
+
+window.ReactDOM.render(
+    <UserSearchForm />,
+    document.getElementById("search")
+);

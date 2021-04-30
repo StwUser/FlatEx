@@ -60,5 +60,23 @@ namespace DBRepository.Repositories
                 _context.SaveChanges();
             }
         }
+
+        public IEnumerable<ApartmentOffer> GetFiltered(Filter filter)
+        {
+            var query = _context.ApartmentOffers.AsQueryable();
+            if (!string.IsNullOrEmpty(filter.SquareFrom) && filter.SquareFrom.All(char.IsDigit))
+                query = query.Where(a => a.Square >= int.Parse(filter.SquareFrom));
+
+            if (!string.IsNullOrEmpty(filter.SquareTo) && filter.SquareTo.All(char.IsDigit))
+                query = query.Where(a => a.Square <= int.Parse(filter.SquareTo));
+
+            if (!string.IsNullOrEmpty(filter.PriceFrom) && filter.PriceFrom.All(char.IsDigit))
+                query = query.Where(a => a.Price >= int.Parse(filter.PriceFrom));
+
+            if (!string.IsNullOrEmpty(filter.PriceTo) && filter.PriceTo.All(char.IsDigit))
+                query = query.Where(a => a.Price <= int.Parse(filter.PriceTo));
+
+            return query.ToArray();
+        }
     }
 }

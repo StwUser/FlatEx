@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Models.Models;
 
 namespace DBRepository.Interfaces
 {
@@ -16,6 +18,6 @@ namespace DBRepository.Interfaces
         void Delete(int id);
         IEnumerable<T> GetAll();
 
-        IEnumerable<T> GetFilteredQuery(T filter);
+        IEnumerable<T> GetFiltered(Filter filter);
     }
 }
