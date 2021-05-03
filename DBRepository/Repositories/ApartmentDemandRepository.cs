@@ -73,7 +73,7 @@ namespace DBRepository.Repositories
             if (filter.Page != 0)
             {
                 //paging
-                query = query.OrderBy(d => d.Id).Skip(filter.Page * 5 - 5).Take(5);
+                query = query.OrderBy(d => d.Id).Skip(filter.Page * Constants.Values.PageSize - Constants.Values.PageSize).Take(Constants.Values.PageSize);
             }
 
             return query.ToArray();
