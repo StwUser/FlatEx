@@ -484,7 +484,7 @@ function renderAds(){
 class UserSearchForm extends React.Component {
     constructor(props){
         super(props);
-        this.state = { apartments: [], value: "offers", squareFrom: "", squareTo: "", priceFrom : "", priceTo : "" };
+        this.state = { apartments: [], value: "offers", squareFrom: "", squareTo: "", priceFrom : "", priceTo : "", pages : 0 };
 
         this.handleChange = this.handleChange.bind(this);
         this.onSquareFromChange = this.onSquareFromChange.bind(this);
@@ -492,9 +492,11 @@ class UserSearchForm extends React.Component {
         this.onPriceFromChange = this.onPriceFromChange.bind(this);
         this.onPriceToChange = this.onPriceToChange.bind(this);
         this.loadApartmens = this.loadApartmens.bind(this);
+        this.getNumberOfPages = this.getNumberOfPages.bind(this);
     }
     handleChange(event) {    
         this.setState({value: event.target.value});
+        this.getNumberOfPages();     
     }
     onSquareFromChange(e) {
         this.setState({ squareFrom: e.target.value });
@@ -507,9 +509,31 @@ class UserSearchForm extends React.Component {
     }     
     onPriceToChange(e) {
         this.setState({ priceTo: e.target.value });
+    }
+    getNumberOfPages(){
+        if(this.state.value == "offers")
+            var apiUrl = "/Apartment/Offers";
+        else if(this.state.value == "demands")
+            var apiUrl = "/Apartment/Demands";
+
+        var xhr = new XMLHttpRequest();
+            xhr.open("get", apiUrl + "/Getpagescount", true); 
+            
+            xhr.onload = function () {
+                var data = JSON.parse(xhr.responseText);
+                this.setState({ pages: data });
+            }.bind(this);
+            xhr.send();    
     }         
-    loadApartmens() {
-        var queryString = `?squareFrom=${this.state.squareFrom}&squareTo=${this.state.squareTo}&priceFrom=${this.state.priceFrom}&priceTo=${this.state.priceTo}`;
+    componentDidMount() {
+        this.getNumberOfPages();
+    }
+    loadApartmens(pageNumber) {
+        console.log(pageNumber);
+
+        var queryString = `?squareFrom=${this.state.squareFrom}&squareTo=${this.state.squareTo}&priceFrom=${this.state.priceFrom}&priceTo=${this.state.priceTo}&page=${pageNumber}`;
+
+        console.log(queryString);
 
         if(this.state.value == "offers")
             var apiUrl = "/Apartment/Offers";
@@ -520,13 +544,17 @@ class UserSearchForm extends React.Component {
         xhr.open("get", apiUrl + queryString, true);
         xhr.onload = function () {
             var data = JSON.parse(xhr.responseText);
-            this.setState({ apartments: data });
             console.log(data);
+            this.setState({ apartments: data });
         }.bind(this);
         xhr.send();
     }   
     render() {
-   
+        var buttons = [];
+        for (let i = 1; i <= this.state.pages; ++i) {
+            buttons.push(<button key={i} onClick={() => this.loadApartmens(i)}>{i}</button>);
+        }
+
         return (
             
           <div> 
@@ -538,7 +566,7 @@ class UserSearchForm extends React.Component {
               <input type="number" placeholder="Square to" value={this.state.squareTo} onChange={this.onSquareToChange} style={{"WebkitAppearance" : "none", "margin" : "0 0 0 2px", "MozAppearance" : "textfield"}} />
               <input type="number" placeholder="Price from" value={this.state.priceFrom} onChange={this.onPriceFromChange} style={{"WebkitAppearance" : "none", "margin" : "0 0 0 2px", "MozAppearance" : "textfield"}} />
               <input type="number" placeholder="Price to" value={this.state.priceTo} onChange={this.onPriceToChange} style={{"WebkitAppearance" : "none", "margin" : "0 2px 0 2px", "MozAppearance" : "textfield"}} />
-              <button onClick={this.loadApartmens}> Search </button>
+              <button onClick={() => this.loadApartmens(0)}> Search </button>
                 <table style={{ "margin" : "6px 0 0 3px", "borderSpacing" : "5px 5px"}}>
                     <thead></thead>
                     <tbody>
@@ -558,7 +586,10 @@ class UserSearchForm extends React.Component {
                         </tr>
                     ))}
                     </tbody>
-                </table>      
+                </table> 
+                <div>
+                    {buttons}
+                </div>
           </div>
         );
     }

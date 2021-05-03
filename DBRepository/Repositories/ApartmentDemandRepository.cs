@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using DBRepository.Interfaces;
@@ -69,7 +70,18 @@ namespace DBRepository.Repositories
             if (!string.IsNullOrEmpty(filter.PriceTo) && filter.PriceTo.All(char.IsDigit))
                 query = query.Where(a => a.PriceCap <= int.Parse(filter.PriceTo));
 
+            if (filter.Page != 0)
+            {
+                //paging
+                query = query.OrderBy(d => d.Id).Skip(filter.Page * 5 - 5).Take(5);
+            }
+
             return query.ToArray();
+        }
+
+        public int GetNumberOfPages()
+        {
+            return (int)Math.Ceiling((double)_context.ApartmentDemands.Count() / Constants.Values.PageSize);
         }
     }
 }

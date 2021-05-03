@@ -62,5 +62,10 @@ namespace DBRepository.Repositories
 
             return _context.Users.ToList();
         }
+
+        public int GetNumberOfPages()
+        {
+            return (int)Math.Ceiling((double)_context.Users.Count() / Constants.Values.PageSize);
+        }
     }
 }

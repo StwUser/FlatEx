@@ -20,6 +20,15 @@ namespace DBRepository
                 context.ApartmentOffers.AddRange(
                     
                     new ApartmentOffer() { Title = "For rent", Content = "Rent 1-room apartment", Address = "Minsk, Aerodromnaya st., 32", Price = 300, Square = 50, User = user },
+                    new ApartmentOffer() { Title = "For rent", Content = "Rent 2-room apartment", Address = "Minsk, Aerodromnaya st., 64", Price = 500, Square = 60, User = user }, 
+                    new ApartmentOffer() { Title = "For rent", Content = "Rent 4-room apartment", Address = "Minsk, Sedih st., 16", Price = 900, Square = 100, User = user },
+                    new ApartmentOffer() { Title = "For rent", Content = "Rent 1-room apartment", Address = "Minsk, Aerodromnaya st., 32", Price = 300, Square = 50, User = user },
+                    new ApartmentOffer() { Title = "For rent", Content = "Rent 2-room apartment", Address = "Minsk, Aerodromnaya st., 64", Price = 500, Square = 60, User = user },
+                    new ApartmentOffer() { Title = "For rent", Content = "Rent 4-room apartment", Address = "Minsk, Sedih st., 16", Price = 900, Square = 100, User = user },
+                    new ApartmentOffer() { Title = "For rent", Content = "Rent 1-room apartment", Address = "Minsk, Aerodromnaya st., 32", Price = 300, Square = 50, User = user },
+                    new ApartmentOffer() { Title = "For rent", Content = "Rent 2-room apartment", Address = "Minsk, Aerodromnaya st., 64", Price = 500, Square = 60, User = user },
+                    new ApartmentOffer() { Title = "For rent", Content = "Rent 4-room apartment", Address = "Minsk, Sedih st., 16", Price = 900, Square = 100, User = user },
+                    new ApartmentOffer() { Title = "For rent", Content = "Rent 1-room apartment", Address = "Minsk, Aerodromnaya st., 32", Price = 300, Square = 50, User = user },
                     new ApartmentOffer() { Title = "For rent", Content = "Rent 2-room apartment", Address = "Minsk, Aerodromnaya st., 64", Price = 500, Square = 60, User = user },
                     new ApartmentOffer() { Title = "For rent", Content = "Rent 4-room apartment", Address = "Minsk, Sedih st., 16", Price = 900, Square = 100, User = user });
 

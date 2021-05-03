@@ -33,11 +33,6 @@ namespace DBRepository.Repositories
             return _context.ApartmentOffers.ToList();
         }
 
-        public IEnumerable<ApartmentOffer> GetFilteredQuery(ApartmentOffer filter)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Delete(int id)
         {
             var entity = _context.ApartmentOffers.FirstOrDefault(a => a.Id == id);
@@ -76,7 +71,18 @@ namespace DBRepository.Repositories
             if (!string.IsNullOrEmpty(filter.PriceTo) && filter.PriceTo.All(char.IsDigit))
                 query = query.Where(a => a.Price <= int.Parse(filter.PriceTo));
 
+            if (filter.Page != 0)
+            {
+                //paging
+                query = query.OrderBy(o => o.Id).Skip(filter.Page * 5 - 5).Take(5);
+            }
+
             return query.ToArray();
+        }
+
+        public int GetNumberOfPages()
+        {
+            return (int)Math.Ceiling((double)_context.ApartmentOffers.Count() / Constants.Values.PageSize);
         }
     }
 }

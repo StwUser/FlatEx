@@ -18,5 +18,8 @@ namespace Models.Models
         public string PriceFrom { get; set; } = string.Empty;
 
         public string PriceTo { get; set; } = string.Empty;
+
+        public int Page { get; set; }
+
     }
 }

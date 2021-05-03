@@ -19,5 +19,7 @@ namespace DBRepository.Interfaces
         IEnumerable<T> GetAll();
 
         IEnumerable<T> GetFiltered(Filter filter);
+
+        int GetNumberOfPages();
     }
 }

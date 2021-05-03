@@ -25,12 +25,20 @@ namespace FlatEx.Controllers
         [Route("/Apartment/Offers")]
         public IEnumerable<ApartmentOffer> GetAllApartmentOffers([FromQuery]Filter filter)
         {
-            if (filter.SquareFrom != null || filter.SquareTo != null || filter.PriceFrom != null || filter.PriceTo != null)
+
+            if (filter.SquareFrom != null || filter.SquareTo != null || filter.PriceFrom != null || filter.PriceTo != null || filter.Page != 0)
             {
                 return _apartmentOfferRepository.GetFiltered(filter);
             }
 
             return _apartmentOfferRepository.GetAll();
+        }
+
+        [HttpGet]
+        [Route("/Apartment/Offers/GetPagesCount")]
+        public int GetOffersPagesCount()
+        {
+            return _apartmentOfferRepository.GetNumberOfPages();
         }
 
         [HttpGet]
@@ -61,12 +69,20 @@ namespace FlatEx.Controllers
         [Route("/Apartment/Demands")]
         public IEnumerable<ApartmentDemand> GetAllApartmentDemands([FromQuery] Filter filter)
         {
-            if (filter.SquareFrom != null || filter.SquareTo != null || filter.PriceFrom != null || filter.PriceTo != null)
+
+            if (filter.SquareFrom != null || filter.SquareTo != null || filter.PriceFrom != null || filter.PriceTo != null || filter.Page != 0)
             {
                 return _apartmentDemandRepository.GetFiltered(filter);
             }
 
             return _apartmentDemandRepository.GetAll();
+        }
+
+        [HttpGet]
+        [Route("/Apartment/Demands/GetPagesCount")]
+        public int GetDemandsPagesCount()
+        {
+            return _apartmentDemandRepository.GetNumberOfPages();
         }
 
         [HttpGet]
