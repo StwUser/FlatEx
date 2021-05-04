@@ -71,6 +71,9 @@ namespace DBRepository.Repositories
             if (!string.IsNullOrEmpty(filter.PriceTo) && filter.PriceTo.All(char.IsDigit))
                 query = query.Where(a => a.Price <= int.Parse(filter.PriceTo));
 
+            if (!string.IsNullOrEmpty(filter.District))
+                query = query.Where(a => a.Address.Contains(filter.District));
+
             if (filter.Page != 0)
             {
                 //paging

@@ -19,6 +19,8 @@ namespace Models.Models
 
         public string PriceTo { get; set; } = string.Empty;
 
+        public string District { get; set; } = string.Empty;
+
         public int Page { get; set; }
 
     }

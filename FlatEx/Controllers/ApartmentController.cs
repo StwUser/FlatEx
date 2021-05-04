@@ -26,7 +26,7 @@ namespace FlatEx.Controllers
         public IEnumerable<ApartmentOffer> GetAllApartmentOffers([FromQuery]Filter filter)
         {
 
-            if (filter.SquareFrom != null || filter.SquareTo != null || filter.PriceFrom != null || filter.PriceTo != null || filter.Page != 0)
+            if (filter.SquareFrom != null || filter.SquareTo != null || filter.PriceFrom != null || filter.PriceTo != null || filter.Page != 0 || filter.District != null)
             {
                 return _apartmentOfferRepository.GetFiltered(filter);
             }

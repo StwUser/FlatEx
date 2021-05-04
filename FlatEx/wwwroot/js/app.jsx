@@ -484,13 +484,14 @@ function renderAds(){
 class UserSearchForm extends React.Component {
     constructor(props){
         super(props);
-        this.state = { apartments: [], value: "offers", squareFrom: "", squareTo: "", priceFrom : "", priceTo : "", pages : 0 };
+        this.state = { apartments: [], value: "offers", squareFrom: "", squareTo: "", priceFrom : "", priceTo : "", district : "" , pages : 0 };
 
         this.handleChange = this.handleChange.bind(this);
         this.onSquareFromChange = this.onSquareFromChange.bind(this);
         this.onSquareToChange = this.onSquareToChange.bind(this);
         this.onPriceFromChange = this.onPriceFromChange.bind(this);
         this.onPriceToChange = this.onPriceToChange.bind(this);
+        this.onDistrictChange = this.onDistrictChange.bind(this);
         this.loadApartmens = this.loadApartmens.bind(this);
         this.getNumberOfPages = this.getNumberOfPages.bind(this);
     }
@@ -509,6 +510,9 @@ class UserSearchForm extends React.Component {
     }     
     onPriceToChange(e) {
         this.setState({ priceTo: e.target.value });
+    }
+    onDistrictChange(e) {
+        this.setState({ district: e.target.value });
     }
     getNumberOfPages(){
         if(this.state.value == "offers")
@@ -531,7 +535,7 @@ class UserSearchForm extends React.Component {
     loadApartmens(pageNumber) {
         console.log(pageNumber);
 
-        var queryString = `?squareFrom=${this.state.squareFrom}&squareTo=${this.state.squareTo}&priceFrom=${this.state.priceFrom}&priceTo=${this.state.priceTo}&page=${pageNumber}`;
+        var queryString = `?squareFrom=${this.state.squareFrom}&squareTo=${this.state.squareTo}&priceFrom=${this.state.priceFrom}&priceTo=${this.state.priceTo}&district=${this.state.district}&page=${pageNumber}`;
 
         console.log(queryString);
 
@@ -562,10 +566,11 @@ class UserSearchForm extends React.Component {
                 <option value="demands">search in Demands</option>
                 <option value="offers">search in Offers</option>
               </select>
-              <input type="number" placeholder="Square from" value={this.state.squareFrom} onChange={this.onSquareFromChange} style={{"WebkitAppearance" : "none", "margin" : "0", "MozAppearance" : "textfield"}} />
-              <input type="number" placeholder="Square to" value={this.state.squareTo} onChange={this.onSquareToChange} style={{"WebkitAppearance" : "none", "margin" : "0 0 0 2px", "MozAppearance" : "textfield"}} />
-              <input type="number" placeholder="Price from" value={this.state.priceFrom} onChange={this.onPriceFromChange} style={{"WebkitAppearance" : "none", "margin" : "0 0 0 2px", "MozAppearance" : "textfield"}} />
-              <input type="number" placeholder="Price to" value={this.state.priceTo} onChange={this.onPriceToChange} style={{"WebkitAppearance" : "none", "margin" : "0 2px 0 2px", "MozAppearance" : "textfield"}} />
+              <input type="number" placeholder="Square from" value={this.state.squareFrom} onChange={this.onSquareFromChange} style={{ "width" : "75px", "WebkitAppearance" : "none", "margin" : "0", "MozAppearance" : "textfield"}} />
+              <input type="number" placeholder="Square to" value={this.state.squareTo} onChange={this.onSquareToChange} style={{ "width" : "75px", "WebkitAppearance" : "none", "margin" : "0 0 0 2px", "MozAppearance" : "textfield"}} />
+              <input type="number" placeholder="Price from" value={this.state.priceFrom} onChange={this.onPriceFromChange} style={{ "width" : "75px", "WebkitAppearance" : "none", "margin" : "0 0 0 2px", "MozAppearance" : "textfield"}} />
+              <input type="number" placeholder="Price to" value={this.state.priceTo} onChange={this.onPriceToChange} style={{ "width" : "75px", "WebkitAppearance" : "none", "margin" : "0 2px 0 2px", "MozAppearance" : "textfield"}} />
+              <input type="text" placeholder="District" value={this.state.district} onChange={this.onDistrictChange} style={{"width" : "75px"}} />
               <button onClick={() => this.loadApartmens(0)}> Search </button>
                 <table style={{ "margin" : "6px 0 0 3px", "borderSpacing" : "5px 5px"}}>
                     <thead></thead>
