@@ -23,5 +23,7 @@ namespace Models.Models
         public string PreferAddress { get; set; }
 
         public decimal PriceCap { get; set; }
+
+        public bool IsReserved { get; set; }
     }
 }

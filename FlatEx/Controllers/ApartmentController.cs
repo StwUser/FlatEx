@@ -28,10 +28,10 @@ namespace FlatEx.Controllers
 
             if (filter.SquareFrom != null || filter.SquareTo != null || filter.PriceFrom != null || filter.PriceTo != null || filter.Page != 0 || filter.District != null)
             {
-                return _apartmentOfferRepository.GetFiltered(filter);
+                return _apartmentOfferRepository.GetFiltered(filter).Where(a => a.IsReserved == false);
             }
 
-            return _apartmentOfferRepository.GetAll();
+            return _apartmentOfferRepository.GetAll().Where(a => a.IsReserved == false);
         }
 
         [HttpGet]
@@ -56,6 +56,14 @@ namespace FlatEx.Controllers
             return Ok();
         }
 
+        [HttpPut]
+        [Route("/Apartment/Offers/{userId}")]
+        public IActionResult UpdateApartmentOffer([FromBody] ApartmentOffer offer)
+        {
+            _apartmentOfferRepository.Put(offer);
+            return Ok();
+        }
+
         [HttpDelete]
         [Route("/Apartment/Offers/{id}")]
         public IActionResult DeleteApartmentOffer(int id)
@@ -72,10 +80,10 @@ namespace FlatEx.Controllers
 
             if (filter.SquareFrom != null || filter.SquareTo != null || filter.PriceFrom != null || filter.PriceTo != null || filter.Page != 0)
             {
-                return _apartmentDemandRepository.GetFiltered(filter);
+                return _apartmentDemandRepository.GetFiltered(filter).Where(a => a.IsReserved == false);
             }
 
-            return _apartmentDemandRepository.GetAll();
+            return _apartmentDemandRepository.GetAll().Where(a => a.IsReserved == false);
         }
 
         [HttpGet]
@@ -97,6 +105,14 @@ namespace FlatEx.Controllers
         public IActionResult CreateApartmentDemand([FromBody] ApartmentDemand demand)
         {
             _apartmentDemandRepository.Post(demand);
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("/Apartment/Demands/{userId}")]
+        public IActionResult UpdateApartmentDemand([FromBody] ApartmentDemand demand)
+        {
+            _apartmentDemandRepository.Put(demand);
             return Ok();
         }
 

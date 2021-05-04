@@ -200,14 +200,35 @@ class ApartmentOffer extends React.Component {
         super(props);
         this.state = { data: props.apartmentOffer };
 
-        this.onClick = this.onClick.bind(this);
+        this.onClickDelete = this.onClickDelete.bind(this);
+        this.onIsReservedChange = this.onIsReservedChange.bind(this);
     }
-    onClick(e) {
+    onClickDelete(e) {
         this.props.onRemove(this.state.data);
+    }
+    onIsReservedChange(e) {
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        console.log(value);
+        this.setState({ isReserved : value });
+        console.log();
+        this.state.data.isReserved = value;
+        this.updateUser();
+    }
+    updateUser() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("put", "/Apartment/Offers" + "/" + window.userId, true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+
+            }
+        }.bind(this);
+        xhr.send(JSON.stringify(this.state.data));
     }
     render() {
         return <div>
-            <p><b>id</b> {this.state.data.id}  | <b>title</b> {this.state.data.title}  | <b>content</b> {this.state.data.content}  | <b>square</b>  | {this.state.data.square}m  | <b>address</b> {this.state.data.address}  | <b>price</b> {this.state.data.price} USD  | <button onClick={this.onClick} style={{"borderRadius" : "2px"}}>delete</button></p>
+            <p><b>id</b> {this.state.data.id}  | <b>title</b> {this.state.data.title}  | <b>content</b> {this.state.data.content}  | <b>square</b>  | {this.state.data.square}m  | <b>address</b> {this.state.data.address}  | <b>price</b> {this.state.data.price} USD  | <b>reserve</b> <input name="isReserved" type="checkbox" checked={this.state.data.isReserved} onChange={this.onIsReservedChange} />  | <button onClick={this.onClickDelete} style={{"borderRadius" : "2px"}}>delete</button></p>
                </div>;
     }
 }

@@ -23,5 +23,7 @@ namespace Models.Models
         public string Address { get; set; }
 
         public decimal Price { get; set; }
+
+        public bool IsReserved { get; set; }
     }
 }
