@@ -17,5 +17,7 @@ namespace DBRepository
         public DbSet<ApartmentDemand> ApartmentDemands { get; set; }
 
         public DbSet<ApartmentOffer> ApartmentOffers { get; set; }
+
+        public DbSet<FileModel> Files { get; set; }
     }
 }

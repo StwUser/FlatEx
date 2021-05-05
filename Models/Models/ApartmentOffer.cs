@@ -25,5 +25,7 @@ namespace Models.Models
         public decimal Price { get; set; }
 
         public bool IsReserved { get; set; }
+
+        public string Photo { get; set; }
     }
 }
