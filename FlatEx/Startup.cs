@@ -42,6 +42,8 @@ namespace FlatEx
 
             services.AddScoped<IRepository<ApartmentDemand>, ApartmentDemandRepository>();
 
+            services.AddScoped<IFileRepository, FileRepository>();
+
             services.AddMvc();
 
             services.AddReact();

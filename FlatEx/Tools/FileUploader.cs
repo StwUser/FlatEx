@@ -1,5 +1,6 @@
 ﻿using Constants;
 using DBRepository;
+using DBRepository.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Models.Models;
@@ -8,12 +9,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DBRepository.Interfaces;
 
 namespace FlatEx.Tools
 {
     public static class FileUploader
     {
-        public static async Task<bool> UploadFile(RepositoryContext context, IWebHostEnvironment appEnvironment, IFormFile uploadedFile)
+        public static async Task<string> UploadFile(IFileRepository repository, IWebHostEnvironment appEnvironment, IFormFile uploadedFile)
         {
             if (uploadedFile != null)
             {
@@ -27,16 +29,15 @@ namespace FlatEx.Tools
                     await uploadedFile.CopyToAsync(fileStream);
                 }
                 FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
-                await context.Files.AddAsync(file);
-                await context.SaveChangesAsync();
+                repository.PostAsync(file);
 
-                return true;
+                return path;
             }
 
-            return false;
+            return "error";
         }
 
-        public static async Task<bool> DeleteImage(RepositoryContext context, IWebHostEnvironment appEnvironment, string filePath)
+        public static async Task<string> DeleteImage(FileRepository repository, IWebHostEnvironment appEnvironment, string filePath)
         {
             if (filePath != null)
             {
@@ -46,18 +47,12 @@ namespace FlatEx.Tools
                     await Task.Run(() => fileInf.Delete());
                 }
 
-                var fileForDelete = context.Files.FirstOrDefault(f => f.Path == filePath);
-                if (fileForDelete != null)
-                {
-                    context.Files.Remove(fileForDelete);
-                    await context.SaveChangesAsync();
-                    return true;
-                }
+                repository.DeleteAsync(filePath);
 
-                return false;
+                return filePath;
             }
 
-            return false;
+            return "error";
         }
     }
 }

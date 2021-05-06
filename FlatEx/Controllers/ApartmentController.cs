@@ -5,19 +5,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlatEx.Tools;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace FlatEx.Controllers
 {
-    [ApiController]
     public class ApartmentController : Controller
     {
         private readonly IRepository<ApartmentOffer> _apartmentOfferRepository;
         private readonly IRepository<ApartmentDemand> _apartmentDemandRepository;
+        private readonly IFileRepository _fileRepository;
+        private readonly IWebHostEnvironment _appEnvironment;
 
-        public ApartmentController(IRepository<ApartmentOffer> apartmentOfferRepository, IRepository<ApartmentDemand> apartmentDemandRepository)
+        public ApartmentController(IRepository<ApartmentOffer> apartmentOfferRepository, IRepository<ApartmentDemand> apartmentDemandRepository, IFileRepository fileRepository, IWebHostEnvironment appEnvironment)
         {
             _apartmentOfferRepository = apartmentOfferRepository;
             _apartmentDemandRepository = apartmentDemandRepository;
+            _fileRepository = fileRepository;
+            _appEnvironment = appEnvironment;
         }
 
         //Offers Part
@@ -122,6 +128,37 @@ namespace FlatEx.Controllers
         {
             _apartmentDemandRepository.Delete(id);
             return Ok();
+        }
+
+        // Upload Images
+        [HttpPost]
+        [Route("/Files/Images/")]
+        public async Task<IActionResult> UploadImage([FromForm] IFormFile uploadedFile, [FromQuery] int id, string type)
+        {
+            var photoPath = await FileUploader.UploadFile(_fileRepository, _appEnvironment, uploadedFile);
+
+            if (type.ToLower() == "demands")
+            {
+                var apartment = _apartmentDemandRepository.Get(id);
+                apartment.Photo = photoPath;
+                _apartmentDemandRepository.Put(apartment);
+            }
+
+            if (type.ToLower() == "offers")
+            {
+                var apartment = _apartmentOfferRepository.Get(id);
+                apartment.Photo = photoPath;
+                _apartmentOfferRepository.Put(apartment);
+            }
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("/Files/Images/")]
+        public async Task<IActionResult> Index()
+        {
+            return View(await _fileRepository.GetAll());
         }
     }
 }
